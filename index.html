@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مواقيت الصلاة</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma;
+}
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+width:380px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(10px);
+border-radius:20px;
+padding:20px;
+box-shadow:0 0 25px rgba(0,0,0,.4);
+}
+
+h1{
+text-align:center;
+margin-bottom:15px;
+font-size:30px;
+}
+
+.clock{
+text-align:center;
+font-size:30px;
+margin-bottom:20px;
+color:#FFD54F;
+}
+
+.date{
+text-align:center;
+margin-bottom:20px;
+}
+
+.card{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+margin:8px 0;
+border-radius:12px;
+background:rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.card.active{
+background:#43A047;
+transform:scale(1.03);
+}
+
+.name{
+font-size:20px;
+}
+
+.time{
+font-size:18px;
+}
+
+.iqama{
+font-size:15px;
+color:#FFD54F;
+}
+
+footer{
+text-align:center;
+margin-top:20px;
+font-size:14px;
+opacity:.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🕌 مواقيت الصلاة</h1>
+
+<div class="clock" id="clock"></div>
+
+<div class="date" id="date"></div>
+
+<div id="list"></div>
+
+<footer>
+نسأل الله أن يتقبل منا ومنكم
+</footer>
+
+</div>
+
+<script>
+
+const prayers=[
+{
+name:"الفجر",
+time:"04:35",
+iqama:"04:55"
+},
+{
+name:"الظهر",
+time:"12:45",
+iqama:"13:00"
+},
+{
+name:"العصر",
+time:"16:30",
+iqama:"16:45"
+},
+{
+name:"المغرب",
+time:"19:45",
+iqama:"19:50"
+},
+{
+name:"العشاء",
+time:"21:05",
+iqama:"21:20"
+}
+];
+
+function updateClock(){
+
+const now=new Date();
+
+document.getElementById("clock").innerHTML=
+now.toLocaleTimeString('ar-EG');
+
+document.getElementById("date").innerHTML=
+now.toLocaleDateString('ar-EG',{
+weekday:'long',
+year:'numeric',
+month:'long',
+day:'numeric'
+});
+
+showPrayers();
+
+}
+
+function showPrayers(){
+
+let html="";
+
+const now=new Date();
+
+const current=
+now.getHours()*60+now.getMinutes();
+
+let active=-1;
+
+for(let i=0;i<prayers.length;i++){
+
+const t=prayers[i].time.split(":");
+
+const m=parseInt(t[0])*60+parseInt(t[1]);
+
+if(current>=m)
+active=i;
+
+}
+
+for(let i=0;i<prayers.length;i++){
+
+html+=`
+<div class="card ${i==active?"active":""}">
+<div>
+
+<div class="name">${prayers[i].name}</div>
+
+<div class="iqama">
+الإقامة : ${prayers[i].iqama}
+</div>
+
+</div>
+
+<div class="time">
+${prayers[i].time}
+</div>
+
+</div>
+`;
+
+}
+
+document.getElementById("list").innerHTML=html;
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+</script>
+
+</body>
+</html>
